@@ -142,6 +142,7 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="_Debug.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="OS.h" />
     <ClInclude Include="_Logger.h" />

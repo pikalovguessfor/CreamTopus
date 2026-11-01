@@ -19,6 +19,9 @@
     <ClInclude Include="_Logger.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="_Debug.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
