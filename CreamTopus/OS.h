@@ -2,6 +2,7 @@
 
 #include <string>
 #include <Windows.h>
+#include <stdexcept>
 
 #pragma warning(disable: 4996)
 
