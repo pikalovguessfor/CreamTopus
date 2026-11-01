@@ -20,8 +20,11 @@ int main() {
 
 	std::cout << "Welcome to creamTopus! Utility to unlock steam dlc`s" << std::endl;
 	
+	directories.CreateDirectoryIfNotExists("temp"); // Creating a temporary directory to store temporary files
+	file.CreateTxTFileIfNotExists("temp/InputMain.txt", " ");// Creating a temporary input file to store the input from the CPP Program
+	file.CreateTxTFileIfNotExists("temp/OutputScript.txt", " "); // Creating a temporary output file to output from the c# script
+
 	while (true){
-		directories.CreateDirectoryIfNotExists("temp"); // Creating a temporary directory to store temporary files
 
 		//----------------------Logic to Find the Steam Installation Directories----------------------//
 
@@ -57,7 +60,10 @@ int main() {
 
 		//-------------------End of Logic to Unlock Game DLC`s-----------------------------------------//
 
-		directories.DeleteDirectoryIfExists("temp"); // Deleting the temporary directory after the process is completed
 
 	}
+
+	file.DeleteTxTFileIfExists("temp/InputMain.txt"); // Deleting the temporary input file after the process is completed	
+	file.DeleteTxTFileIfExists("temp/OutputScript.txt"); // Deleting the temporary output file after the process is completed
+	directories.DeleteDirectoryIfExists("temp"); // Deleting the temporary directory after the process is completed
 }

@@ -90,5 +90,12 @@ namespace Octo {
 			}
 		}
 
+		void WriteToTxTFile(const std::string& path, const std::string& content) {
+			std::ofstream file(path, std::ios::out | std::ios::trunc);
+			if (file.is_open()) {
+				file << content;
+				file.close();
+			}
+		}
 	};
 }

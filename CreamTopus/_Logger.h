@@ -14,6 +14,15 @@ namespace Octo {
 	private:
 
 		std::string logFilePath; // Path to the log file where log messages will be written
+		std::string GetCurrentTimestamp() {
+			auto now = std::chrono::system_clock::now();
+			auto in_time_t = std::chrono::system_clock::to_time_t(now);
+			std::tm buf;
+			localtime_s(&buf, &in_time_t);
+			char timestamp[20];
+			strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", &buf);
+			return std::string(timestamp);
+		}
 
 	public:
 
@@ -28,7 +37,7 @@ namespace Octo {
 		void Write(const std::string& message) {
 			std::ofstream logFile(logFilePath, std::ios::app);
 			if (logFile.is_open()) {
-				logFile << message << std::endl;
+				logFile << "[" + GetCurrentTimestamp() + "]" << " - " << message << std::endl; // Write the log message to the log file with a timestamp
 				logFile.close();
 			}
 		}
