@@ -7,6 +7,18 @@
 #include "_Debug.h"
 #include "Steam.h"
 
+/*
+* Welcome to creamTopus! This is a utility to unlock Steam DLCs for games.
+* The program interacts with the Steam installation, retrieves information about installed games, and allows users to unlock DLCs for those games.
+* It also provides logging and debugging functionalities to help track the process and any issues that may arise.
+* Code is organized into classes and structs to encapsulate related functionalities, making it easier to maintain and extend.
+* All classes and structs are defined in their respective header files, and the main logic is implemented in the Main.cpp file.
+* All classes and structs are encapsulated within the Octo namespace to avoid naming conflicts and provide a clear structure for the codebase.
+* If you have any questions or need further assistance, please refer to the documentation or contact the developer.
+* Else if you want to modificate this utility, please make sure to understand the code and its dependencies before making any changes.
+* Good luck and happy coding, sir or madam!
+*/
+
 int main() {
 
 	Octo::Logger logger; // Creating a object of the Logger class to log messages

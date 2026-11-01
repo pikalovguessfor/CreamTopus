@@ -26,18 +26,21 @@ namespace Octo {
 
 	public:
 
-		std::string GetSteamInstallLocation() {
-			// Logic to find the Steam installation directory
-			char buffer[MAX_PATH];
-			HKEY hKey;
-			if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\WOW6432Node\\Valve\\Steam", 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
-				DWORD bufferSize = sizeof(buffer);
-				if (RegQueryValueExA(hKey, "InstallPath", NULL, NULL, (LPBYTE)buffer, &bufferSize) == ERROR_SUCCESS) {
-					RegCloseKey(hKey);
-					return std::string(buffer);
-				}
-				RegCloseKey(hKey);
-			}
+		std::string GetSteamInstallLocation() { //Method to get the steam installation location from the registry
+
+
+			return "";
+		}
+
+		std::string GetAllSteamLocationsFromlFVDF() { //Method to get all steam locations from the local file VDF
+			return "";
+		}
+		
+		std::string ParseSteamInstalledGames() { // Method to parse the installed games from the steam installation location
+			return "";
+		}
+
+		std::string ParseGameAppId(const std::string& gameName) { // Method to parse the app id of the game from the steam installation location
 			return "";
 		}
 	
