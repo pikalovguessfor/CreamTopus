@@ -7,7 +7,7 @@
 
 namespace Octo {
 
-	class Services
+	class Services // Class to provide information about the operating system and system architecture
 	{
 
 	private:
@@ -60,7 +60,7 @@ namespace Octo {
 
 	};
 
-	class Process
+	class Process // Class to provide functionalities to create and manage processes
 	{
 
 	private:

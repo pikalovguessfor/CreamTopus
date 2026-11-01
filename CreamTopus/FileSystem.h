@@ -5,12 +5,12 @@
 
 namespace Octo {
 
-	struct FileInfo {
+	struct FileInfo { // Struct to store information about a file
 		std::string name;
 		std::string path;
 	};
 
-	class Directories {
+	class Directories { // Class to provide functionalities related to directories
 
 	private:
 
@@ -64,6 +64,29 @@ namespace Octo {
 				FindClose(hFind);
 			}
 			return count;
+		}
+
+	};
+
+	class File { // Class to provide functionalities related to files
+
+	private:
+
+	public:
+		void CreateTxTFileIfNotExists(const std::string& path, const std::string& content) {
+			if (GetFileAttributesA(path.c_str()) == INVALID_FILE_ATTRIBUTES) {
+				std::ofstream file(path);
+				if (file.is_open()) {
+					file << content;
+					file.close();
+				}
+			}
+		}
+
+		void DeleteTxTFileIfExists(const std::string& path) {
+			if (GetFileAttributesA(path.c_str()) != INVALID_FILE_ATTRIBUTES) {
+				DeleteFileA(path.c_str());
+			}
 		}
 
 	};

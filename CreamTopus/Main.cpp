@@ -3,20 +3,25 @@
 
 #include "OS.h"
 #include "_Logger.h"
-#include "fileSystem.h"
+#include "FileSystem.h"
 #include "_Debug.h"
+#include "Steam.h"
 
 int main() {
 
-	Octo::Logger logger;
-	Octo::Debug debug;
-	Octo::Services services;
-	Octo::Directories directories;
-	Octo::FileInfo fileInfo;
+	Octo::Logger logger; // Creating a object of the Logger class to log messages
+	Octo::Steam steam; // Creating a object of the Steam class to interact with Steam
+	Octo::Debug debug; // Creating a object of the Debug class to debug the application
+	Octo::Services services; // Creating a object of the Services class to get information about the operating system
+	Octo::Directories directories; // Creating a object of the Directories class to interact with directories
+	Octo::File file; // Creating a object of the File class to interact with files
+	Octo::FileInfo fileInfo; // Creating a object of the FileInfo struct to store information about files
+	Octo::ApplicationInfo appInfo; // Creating a object of the ApplicationInfo struct to store information about applications
 
 	std::cout << "Welcome to creamTopus! Utility to unlock steam dlc`s" << std::endl;
 	
 	while (true){
+		directories.CreateDirectoryIfNotExists("temp"); // Creating a temporary directory to store temporary files
 
 		//----------------------Logic to Find the Steam Installation Directories----------------------//
 
@@ -52,7 +57,7 @@ int main() {
 
 		//-------------------End of Logic to Unlock Game DLC`s-----------------------------------------//
 
-
+		directories.DeleteDirectoryIfExists("temp"); // Deleting the temporary directory after the process is completed
 
 	}
 }

@@ -8,7 +8,7 @@
 
 namespace Octo {
 
-	class Debug {
+	class Debug { // Class to provide debugging functionalities
 
 	private:
 
