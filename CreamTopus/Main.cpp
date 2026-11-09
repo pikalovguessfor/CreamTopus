@@ -71,8 +71,6 @@ int main() {
 
 
 		//-------------------End of Logic to Unlock Game DLC`s-----------------------------------------//
-
-
 	}
 
 	file.DeleteTxTFileIfExists("temp/InputMain.txt"); // Deleting the temporary input file after the process is completed	
