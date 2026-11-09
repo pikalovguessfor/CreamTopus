@@ -7,6 +7,7 @@
 #include "_Debug.h"
 #include "Steam.h"
 
+
 /*
 * Welcome to creamTopus! This is a utility to unlock Steam DLCs for games.
 * The program interacts with the Steam installation, retrieves information about installed games, and allows users to unlock DLCs for those games.
