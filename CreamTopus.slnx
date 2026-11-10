@@ -5,4 +5,5 @@
     <Platform Name="x86" />
   </Configurations>
   <Project Path="CreamTopus/CreamTopus.vcxproj" Id="b0f3a1e2-97b5-49ba-abf5-5c73454e6043" />
+  <Project Path="get_dlc_list_script/get_dlc_list_script.csproj" Id="a15dbc0b-b237-455e-a50c-520a3a6f6ad1" />
 </Solution>
