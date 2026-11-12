@@ -4,8 +4,12 @@ using System.Text.Json;
 
 namespace get_dlc_list_script
 {
-    class Steam
+    class SteamDlcParser
     {
+
+        private Game gameEx = new Game();
+
+
         public async Task<string[]> GetDlcListFromSteamStoreApiAsync(string appId) // this method retrieves the list of DLCs for a given Steam game using the Steam Store API
         {
             string url = $"https://store.steampowered.com/api/appdetails?appids={appId}";
@@ -26,7 +30,7 @@ namespace get_dlc_list_script
             if (!appNode.TryGetProperty("data", out var dataNode) ||
                 !dataNode.TryGetProperty("dlc", out var dlcArray))
             {
-                return Array.Empty<string>(); // У игры нет DLC
+                return Array.Empty<string>(); // if game doesnt have dlc
             }
 
             // 3. using a List<string> to collect the DLC IDs
@@ -38,5 +42,12 @@ namespace get_dlc_list_script
 
             return result.ToArray();
         }
+
+
+        public SteamDlcParser( Game game )
+        {
+            gameEx = game;
+        }
     }
+
 }
