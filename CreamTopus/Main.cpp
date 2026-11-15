@@ -31,13 +31,22 @@ int main() {
 	Octo::FileInfo fileInfo; // Creating a object of the FileInfo struct to store information about files
 	Octo::ApplicationInfo appInfo; // Creating a object of the ApplicationInfo struct to store information about applications
 
-	std::cout << "Welcome to creamTopus! Utility to unlock steam dlc`s" << std::endl;
-	
-	directories.CreateDirectoryIfNotExists("temp"); // Creating a temporary directory to store temporary files
-	file.CreateTxTFileIfNotExists("temp/InputMain.txt", " ");// Creating a temporary input file to store the input from the CPP Program
-	file.CreateTxTFileIfNotExists("temp/OutputScript.txt", " "); // Creating a temporary output file to output from the c# script
+	bool isDebug = false; // Flag to indicate whether the application is running in debug mode or not
+	bool isSteamInstalled = false; // Flag to indicate whether Steam is installed on the system or not
+	bool isSteamRunning = false; // Flag to indicate whether Steam is running or not
+	bool isNormalInstallerScenario = true; // Flag to indicate whether the application is running in normal scenario or not
 
-	while (true){
+	int ScenarioSwitch = 0; // Variable to store the current scenario of the application
+
+	std::cout << "Welcome to creamTopus! Utility to unlock steam dlc`s" << std::endl;
+
+	do {
+
+		if (!isNormalInstallerScenario) {
+			break;
+
+			std::cout << "Exiting the application..." << std::endl;
+		}
 
 		//----------------------Logic to Find the Steam Installation Directories----------------------//
 
@@ -56,8 +65,7 @@ int main() {
 
 
 		//----------------------Logic to Select which game need to be unlocked-----------------------//
-
-
+		
 
 		//-------------------End of Logic to Select which game need to be unlocked-------------------//
 		//----------------------Logic to Parse Game DLC`s for Game-----------------------------------//
@@ -73,8 +81,5 @@ int main() {
 
 		//-------------------End of Logic to Unlock Game DLC`s-----------------------------------------//
 	}
-
-	file.DeleteTxTFileIfExists("temp/InputMain.txt"); // Deleting the temporary input file after the process is completed	
-	file.DeleteTxTFileIfExists("temp/OutputScript.txt"); // Deleting the temporary output file after the process is completed
-	directories.DeleteDirectoryIfExists("temp"); // Deleting the temporary directory after the process is completed
+	while (isNormalInstallerScenario);
 }
