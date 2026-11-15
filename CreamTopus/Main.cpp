@@ -33,6 +33,7 @@ int main() {
 
 	bool isDebug = false; // Flag to indicate whether the application is running in debug mode or not
 	bool isSteamInstalled = false; // Flag to indicate whether Steam is installed on the system or not
+	bool isSyeamDirectoryFound = false; // Flag to indicate whether the Steam installation directory is found or not
 	bool isSteamRunning = false; // Flag to indicate whether Steam is running or not
 	bool isNormalInstallerScenario = true; // Flag to indicate whether the application is running in normal scenario or not
 
@@ -50,8 +51,15 @@ int main() {
 
 		//----------------------Logic to Find the Steam Installation Directories----------------------//
 
+		std::wstring steamInstallLocation = steam.GetSteamInstallLocation(); // Get the Steam installation location from the registry
+		std::wcout << "Steam Installation Location: " << steamInstallLocation << std::endl;
+		logger.Write("Steam Installation Location: " + std::string(steamInstallLocation.begin(), steamInstallLocation.end())); // Log the Steam installation location
 
-
+		std::vector <std::wstring> steamLocations = steam.GetAllSteamLocationsFromVDF(); // Get all Steam installation locations from the libraryfolders.vdf file
+		for (int i = 0; i < steamLocations.size(); ++i) {
+			std::wcout << "Steam Location " << i + 1 << ": " << steamLocations[i] << std::endl;
+			logger.Write("Steam Location " + std::to_string(i + 1) + ": " + std::string(steamLocations[i].begin(), steamLocations[i].end())); // Log the Steam installation locations
+		}
 
 
 		//-------------------End of Logic to Find the Steam Installation Directories------------------//
