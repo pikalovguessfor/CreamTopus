@@ -6,6 +6,7 @@
 #include "FileSystem.h"
 #include "_Debug.h"
 #include "Steam.h"
+#include "SmokeApi.h"
 
 
 /*
@@ -30,6 +31,7 @@ int main() {
 	Octo::File file; // Creating a object of the File class to interact with files
 	Octo::FileInfo fileInfo; // Creating a object of the FileInfo struct to store information about files
 	Octo::ApplicationInfo appInfo; // Creating a object of the ApplicationInfo struct to store information about applications
+	Octo::SmokeApi smokeApi; // Creating a object of the SmokeApi class to interact with the SmokeApi.dll file
 
 	bool isDebug = false; // Flag to indicate whether the application is running in debug mode or not
 	bool isSteamInstalled = false; // Flag to indicate whether Steam is installed on the system or not
@@ -56,6 +58,14 @@ int main() {
 		logger.Write("Steam Installation Location: " + std::string(steamInstallLocation.begin(), steamInstallLocation.end())); // Log the Steam installation location
 
 		std::vector <std::wstring> steamLocations = steam.GetAllSteamLocationsFromVDF(); // Get all Steam installation locations from the libraryfolders.vdf file
+
+		if (steamLocations.empty() || steamLocations[0] == L"STEAM_INSTALL_LOCATION_NOT_FOUND" || steamLocations[0] == L"STEAM_VDF_FILE_NOT_FOUND") { // Check if the Steam installation location or libraryfolders.vdf file is not found
+			std::wcout << "Steam installation location not found or libraryfolders.vdf file not found." << std::endl;
+			logger.Write("Steam installation location not found or libraryfolders.vdf file not found.");
+			isNormalInstallerScenario = false;
+			continue;
+		}
+
 		for (int i = 0; i < steamLocations.size(); ++i) {
 			std::wcout << "Steam Location " << i + 1 << ": " << steamLocations[i] << std::endl;
 			logger.Write("Steam Location " + std::to_string(i + 1) + ": " + std::string(steamLocations[i].begin(), steamLocations[i].end())); // Log the Steam installation locations

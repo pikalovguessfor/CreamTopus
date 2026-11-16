@@ -199,11 +199,11 @@ namespace Octo {
 			return uniqueLocations;
 		}
 		
-		std::vector<std::string> ParseSteamInstalledGames() { // Method to parse the installed games from the steam installation location
+		std::vector<std::wstring> ParseSteamInstalledGamesWithPath(const std::wstring& steamPath) { // Method to parse the installed games from the steam installation location
 			return {};
 		}
 
-		std::vector<std::string> ParseGameAppId(const std::string& gameName) { // Method to parse the app id of the game from the steam installation location
+		std::vector<std::wstring> ParseGameAppId(const std::string& gameName) { // Method to parse the app id of the game from the steam installation location
 			return {};
 		}
 	

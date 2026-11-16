@@ -67,6 +67,28 @@ namespace Octo {
 			return count;
 		}
 
+		bool isDirectoryExists(const std::string& path) {
+			DWORD ftyp = GetFileAttributesA(path.c_str());
+			if (ftyp == INVALID_FILE_ATTRIBUTES) {
+				return false;  // Path does not exist
+			}
+			if (ftyp & FILE_ATTRIBUTE_DIRECTORY) {
+				return true;   // Path is a directory
+			}
+			return false;    // Path is not a directory
+		}
+
+		bool isFileExists(const std::string& path) {
+			DWORD ftyp = GetFileAttributesA(path.c_str());
+			if (ftyp == INVALID_FILE_ATTRIBUTES) {
+				return false;  // Path does not exist
+			}
+			if (ftyp & FILE_ATTRIBUTE_DIRECTORY) {
+				return false;   // Path is a directory
+			}
+			return true;    // Path is a file
+		}
+
 	};
 
 	class File { // Class to provide functionalities related to files
