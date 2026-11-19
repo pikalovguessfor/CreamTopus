@@ -24,7 +24,6 @@
 int main() {
 
 	Octo::Logger logger; // Creating a object of the Logger class to log messages
-	Octo::Steam steam; // Creating a object of the Steam class to interact with Steam
 	Octo::Debug debug; // Creating a object of the Debug class to debug the application
 	Octo::Services services; // Creating a object of the Services class to get information about the operating system
 	Octo::Directories directories; // Creating a object of the Directories class to interact with directories
@@ -45,6 +44,8 @@ int main() {
 
 	do {
 
+		Octo::SteamGamesParcer steamGamesParcer; // Creating a object of the SteamGamesParcer class to interact with Steam
+
 		if (!isNormalInstallerScenario) {
 			break;
 
@@ -53,24 +54,14 @@ int main() {
 
 		//----------------------Logic to Find the Steam Installation Directories----------------------//
 
-		std::wstring steamInstallLocation = steam.GetSteamInstallLocation(); // Get the Steam installation location from the registry
-		std::wcout << "Steam Installation Location: " << steamInstallLocation << std::endl;
-		logger.Write("Steam Installation Location: " + std::string(steamInstallLocation.begin(), steamInstallLocation.end())); // Log the Steam installation location
-
-		std::vector <std::wstring> steamLocations = steam.GetAllSteamLocationsFromVDF(); // Get all Steam installation locations from the libraryfolders.vdf file
-
-		if (steamLocations.empty() || steamLocations[0] == L"STEAM_INSTALL_LOCATION_NOT_FOUND" || steamLocations[0] == L"STEAM_VDF_FILE_NOT_FOUND") { // Check if the Steam installation location or libraryfolders.vdf file is not found
-			std::wcout << "Steam installation location not found or libraryfolders.vdf file not found." << std::endl;
-			logger.Write("Steam installation location not found or libraryfolders.vdf file not found.");
-			isNormalInstallerScenario = false;
-			continue;
+	
+		std::cout << "Steam Installation Directories Found: " << std::endl;
+		for (int i = 0; i < steamGamesParcer.AllSteamInstalledLocationsVEC.size(); i++) {
+			std::wcout << steamGamesParcer.AllSteamInstalledLocationsVEC[i] << std::endl;
 		}
-
-		for (int i = 0; i < steamLocations.size(); ++i) {
-			std::wcout << "Steam Location " << i + 1 << ": " << steamLocations[i] << std::endl;
-			logger.Write("Steam Location " + std::to_string(i + 1) + ": " + std::string(steamLocations[i].begin(), steamLocations[i].end())); // Log the Steam installation locations
+		for(int i =0; i < steamGamesParcer.AllSteamInstalledGamesWithPathVEC.size(); i++) {
+			std::wcout << steamGamesParcer.AllSteamInstalledGamesWithPathVEC[i] << std::endl;
 		}
-
 
 		//-------------------End of Logic to Find the Steam Installation Directories------------------//
 		//----------------------Logic to Find Installed games-----------------------------------------//
@@ -96,8 +87,10 @@ int main() {
 
 
 
-
 		//-------------------End of Logic to Unlock Game DLC`s-----------------------------------------//
+
+		std::cin.get(); // Wait for user input before exiting the application
+
 	}
 	while (isNormalInstallerScenario);
 }

@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <vector>
 #include <filesystem>
+#include <cwctype>
 
 #include "OS.h"
 #include "_Logger.h"
@@ -22,7 +23,7 @@ namespace Octo {
 		std::string AppId;
 	};
 
-	class Steam {
+	class SteamGamesParcer {
 	
 	private:
 
@@ -89,8 +90,8 @@ namespace Octo {
 		static bool isLookLikePath(const std::wstring& str) {
 			return str.find(L":\\") != std::wstring::npos || str.find(L"/") != std::wstring::npos;
 		}
-
-	public:
+		
+		std::wstring SteamInstallLocation{}; // Variable to store the steam installation location
 
 		std::wstring GetSteamInstallLocation() { //Method to get the steam installation location from the registry
 			HKEY hKey = nullptr;
@@ -198,15 +199,201 @@ namespace Octo {
 
 			return uniqueLocations;
 		}
-		
-		std::vector<std::wstring> ParseSteamInstalledGamesWithPath(const std::wstring& steamPath) { // Method to parse the installed games from the steam installation location
-			return {};
+		std::vector<std::wstring> ParseSteamInstalledGamesWithPath(const std::vector<std::wstring>& steamLocations) { // Method to parse the installed games from all Steam installation locations
+
+
+			std::vector<std::wstring> installedGames;
+
+			for (const auto& steamLocation : steamLocations) {
+				if (steamLocation.empty()) {
+					continue;
+				}
+
+				const std::filesystem::path steamAppsPath =
+					std::filesystem::path(steamLocation) / L"steamapps";
+				std::error_code ec;
+				if (!std::filesystem::is_directory(steamAppsPath, ec) || ec) {
+					continue;
+				}
+
+				for (const auto& entry : std::filesystem::directory_iterator(steamAppsPath, ec)) {
+					if (ec) {
+						break;
+					}
+
+					if (!entry.is_regular_file(ec) || ec) {
+						ec.clear();
+						continue;
+					}
+
+					const std::filesystem::path manifestPath = entry.path();
+					const std::wstring fileName = manifestPath.filename().wstring();
+					if (fileName.size() <= 16 ||
+						fileName.compare(0, 12, L"appmanifest_") != 0 ||
+						fileName.substr(fileName.size() - 4) != L".acf") {
+						continue;
+					}
+
+					std::wifstream manifestFile(manifestPath);
+					if (!manifestFile) {
+						continue;
+					}
+
+					std::wstring installDirectory;
+					std::wstring line;
+					while (std::getline(manifestFile, line)) {
+						size_t position = line.find_first_not_of(L" \t\r\n");
+						if (position == std::wstring::npos) {
+							continue;
+						}
+
+						std::wstring key;
+						if (!getQuotedToken(line, position, key) || key != L"installdir") {
+							continue;
+						}
+
+						position = line.find_first_not_of(L" \t\r\n", position);
+						if (position != std::wstring::npos &&
+							getQuotedToken(line, position, installDirectory)) {
+							installDirectory = UnescapeVDFString(installDirectory);
+						}
+						break;
+					}
+
+					if (installDirectory.empty()) {
+						continue;
+					}
+
+					const std::filesystem::path gamePath =
+						steamAppsPath / L"common" / installDirectory;
+					if (std::filesystem::is_directory(gamePath, ec) && !ec &&
+						std::find(installedGames.begin(), installedGames.end(), gamePath.wstring()) == installedGames.end()) {
+						installedGames.push_back(gamePath.wstring());
+					}
+					ec.clear();
+				}
+			}
+
+			return installedGames;
 		}
 
+	public:
+
 		std::vector<std::wstring> ParseGameAppId(const std::string& gameName) { // Method to parse the app id of the game from the steam installation location
-			return {};
+			std::vector<std::wstring> appIds;
+			if (gameName.empty()) {
+				return appIds;
+			}
+
+			int wideLength = MultiByteToWideChar(
+				CP_UTF8,
+				MB_ERR_INVALID_CHARS,
+				gameName.data(),
+				static_cast<int>(gameName.size()),
+				nullptr,
+				0);
+			if (wideLength == 0) {
+				return appIds;
+			}
+
+			std::wstring requestedName(wideLength, L'\0');
+			MultiByteToWideChar(
+				CP_UTF8,
+				MB_ERR_INVALID_CHARS,
+				gameName.data(),
+				static_cast<int>(gameName.size()),
+				requestedName.data(),
+				wideLength);
+
+			std::transform(requestedName.begin(), requestedName.end(), requestedName.begin(),
+				[](wchar_t character) { return static_cast<wchar_t>(std::towlower(character)); });
+
+			for (const auto& steamLocation : AllSteamInstalledLocationsVEC) {
+				const std::filesystem::path steamAppsPath =
+					std::filesystem::path(steamLocation) / L"steamapps";
+				std::error_code ec;
+				if (!std::filesystem::is_directory(steamAppsPath, ec) || ec) {
+					continue;
+				}
+
+				for (const auto& entry : std::filesystem::directory_iterator(steamAppsPath, ec)) {
+					if (ec) {
+						break;
+					}
+
+					if (!entry.is_regular_file(ec) || ec) {
+						ec.clear();
+						continue;
+					}
+
+					const std::wstring fileName = entry.path().filename().wstring();
+					if (fileName.size() <= 16 ||
+						fileName.compare(0, 12, L"appmanifest_") != 0 ||
+						fileName.substr(fileName.size() - 4) != L".acf") {
+						continue;
+					}
+
+					std::wifstream manifestFile(entry.path());
+					if (!manifestFile) {
+						continue;
+					}
+
+					std::wstring appId;
+					std::wstring installedGameName;
+					std::wstring line;
+					while (std::getline(manifestFile, line)) {
+						size_t position = line.find_first_not_of(L" \t\r\n");
+						if (position == std::wstring::npos) {
+							continue;
+						}
+
+						std::wstring key;
+						if (!getQuotedToken(line, position, key)) {
+							continue;
+						}
+
+						position = line.find_first_not_of(L" \t\r\n", position);
+						std::wstring value;
+						if (position == std::wstring::npos || !getQuotedToken(line, position, value)) {
+							continue;
+						}
+
+						value = UnescapeVDFString(value);
+						if (key == L"appid") {
+							appId = value;
+						}
+						else if (key == L"name") {
+							installedGameName = value;
+						}
+					}
+
+					std::transform(installedGameName.begin(), installedGameName.end(), installedGameName.begin(),
+						[](wchar_t character) { return static_cast<wchar_t>(std::towlower(character)); });
+
+					if (!appId.empty() && installedGameName == requestedName &&
+						std::find(appIds.begin(), appIds.end(), appId) == appIds.end()) {
+						appIds.push_back(appId);
+					}
+				}
+			}
+
+			return appIds;
 		}
-	
+
+		std::vector<std::wstring> AllSteamInstalledLocationsVEC; // Vector to store all the steam installation locations
+		std::vector<std::wstring> AllSteamInstalledGamesWithAppIdVEC; // Vector to store all the steam installed games
+		std::vector<std::wstring> AllSteamInstalledGamesWithPathVEC; // Vector to store all the steam installed games with path
+
+
+		SteamGamesParcer() { // Constructor
+
+			SteamInstallLocation = GetSteamInstallLocation(); // Get the steam installation location from the registry
+			AllSteamInstalledLocationsVEC = GetAllSteamLocationsFromVDF(); // Get all the steam installation locations from the local file VDF
+			AllSteamInstalledGamesWithAppIdVEC = ParseGameAppId("SomeGameName"); // Parse the app id of the game from the steam installation location
+			AllSteamInstalledGamesWithPathVEC = ParseSteamInstalledGamesWithPath(AllSteamInstalledLocationsVEC); // Parse the path of the game from the steam installation location
+
+		}
+
 	};
 
 }
