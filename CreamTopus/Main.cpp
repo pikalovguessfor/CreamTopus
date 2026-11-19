@@ -51,30 +51,27 @@ int main() {
 
 			std::cout << "Exiting the application..." << std::endl;
 		}
+		
+		//----------------------Logic to Parse Steam Installed Games-----------------------------------//
+		logger.Write("Steam Installation Directories Found: " + std::to_string(steamGamesParcer.AllSteamInstalledLocationsVEC.size()));
+		logger.Write("Steam Installed Games Found: " + std::to_string(steamGamesParcer.AllSteamInstalledGamesWithPathVEC.size()));
+		
+		std::vector <std::wstring> installedGames = steamGamesParcer.AllSteamInstalledGamesWithPathVEC;
+		std::cout << "Installed Games Found: " << installedGames.size() << std::endl;
 
-		//----------------------Logic to Find the Steam Installation Directories----------------------//
-
-	
-		std::cout << "Steam Installation Directories Found: " << std::endl;
-		for (int i = 0; i < steamGamesParcer.AllSteamInstalledLocationsVEC.size(); i++) {
-			std::wcout << steamGamesParcer.AllSteamInstalledLocationsVEC[i] << std::endl;
-		}
-		for(int i =0; i < steamGamesParcer.AllSteamInstalledGamesWithPathVEC.size(); i++) {
-			std::wcout << steamGamesParcer.AllSteamInstalledGamesWithPathVEC[i] << std::endl;
-		}
-
-		//-------------------End of Logic to Find the Steam Installation Directories------------------//
-		//----------------------Logic to Find Installed games-----------------------------------------//
-
-
-
-
-		//-------------------End of Logic to Find Installed games-------------------------------------//
-
-
-
+		//-------------------End of Logic to Parse Steam Installed Games---------------------------------//
 		//----------------------Logic to Select which game need to be unlocked-----------------------//
 		
+		std::wstring ChoosenGameOp{};
+
+		//std::wcout << steamGamesParcer.AllSteamInstalledGamesWithPathVEC[1] << std::endl;
+		//std::vector <std::wstring> RimworldTestAppId = steamGamesParcer.ParseGameAppId("RimWorld");
+		//std::wstring rimworldid = RimworldTestAppId[0];
+		//std::wcout << rimworldid;
+
+		std::wcout << "Select the game to unlock DLCs for:" << std::endl;
+		std::wcin >> ChoosenGameOp;
+
 
 		//-------------------End of Logic to Select which game need to be unlocked-------------------//
 		//----------------------Logic to Parse Game DLC`s for Game-----------------------------------//

@@ -384,12 +384,13 @@ namespace Octo {
 		std::vector<std::wstring> AllSteamInstalledGamesWithAppIdVEC; // Vector to store all the steam installed games
 		std::vector<std::wstring> AllSteamInstalledGamesWithPathVEC; // Vector to store all the steam installed games with path
 
+		std::wstring GameAppId = {};
+
 
 		SteamGamesParcer() { // Constructor
 
 			SteamInstallLocation = GetSteamInstallLocation(); // Get the steam installation location from the registry
 			AllSteamInstalledLocationsVEC = GetAllSteamLocationsFromVDF(); // Get all the steam installation locations from the local file VDF
-			AllSteamInstalledGamesWithAppIdVEC = ParseGameAppId("SomeGameName"); // Parse the app id of the game from the steam installation location
 			AllSteamInstalledGamesWithPathVEC = ParseSteamInstalledGamesWithPath(AllSteamInstalledLocationsVEC); // Parse the path of the game from the steam installation location
 
 		}

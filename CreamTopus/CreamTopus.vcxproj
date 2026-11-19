@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="SmokeApi.h" />
     <ClInclude Include="Steam.h" />
+    <ClInclude Include="UserInterface.h" />
     <ClInclude Include="_Debug.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="OS.h" />
